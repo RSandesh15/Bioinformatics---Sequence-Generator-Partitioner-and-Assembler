@@ -1,5 +1,6 @@
 import random
-
+from contextlib import redirect_stdout
+import sys
 import Bio
 from Bio.Seq import Seq
 from Bio import SeqIO
@@ -33,10 +34,12 @@ if k == 3:
     print("Original Sequence")
     print(chosen_seq.seq + "\n")
 
+
     def remove_random_character(phrase, n_remove):
         for num in random.sample(range(0, len(phrase)), n_remove):
             phrase = phrase[:num] + '_' + phrase[num + 1:]
         return phrase
+
 
     string = chosen_seq.seq
     len_of_seq = float(len(chosen_seq))
@@ -55,18 +58,26 @@ if k == 3:
 elif k == 1:
     print("Original Sequence")
     print(chosen_seq.seq + "\n")
+    with open('BioInfo_Output.txt', 'w') as file1:
+        with redirect_stdout(file1):
+            print(chosen_seq.seq, "\n\n")
 
 elif k > 1:
 
     prob_num = float(input("Enter Desired Probability Between 0 and 1 (Real Number)\n"))
     print("Original Sequence")
     print(chosen_seq.seq + "\n")
+    with open('BioInfo_Output.txt', 'w') as file2:
+        with redirect_stdout(file2):
+            print(chosen_seq.seq, "\n\n")
 
     for i in range(k):
         def remove_random_character(phrase, n_remove):
             for num in random.sample(range(0, len(phrase)), n_remove):
                 phrase = phrase[:num] + '_' + phrase[num + 1:]
             return phrase
+
+
         string = chosen_seq.seq
         len_of_seq = float(len(chosen_seq))
         remove_percentage = float(0.2)
@@ -74,13 +85,24 @@ elif k > 1:
         new_phrase = remove_random_character(string, remove_number)
         print("-->Sequence with Probability", prob_num, " ----------> Randomly Delete Nucleotides")
         print(new_phrase)
+        with open('BioInfo_Output.txt', 'w') as file3:
+            with redirect_stdout(file3):
+                print(new_phrase)
+
 
         def replace_nucleotides():
             prior = str(chosen_seq.seq)
-            new = prior.replace('C', 't', int(len(chosen_seq) * prob_num)).replace('A', 'g', int(len(chosen_seq) * prob_num))
-            new1 = prior.replace('G', 'a', int(len(chosen_seq) * prob_num)).replace('T', 'c', int(len(chosen_seq) * prob_num))
+            new = prior.replace('C', 't', int(len(chosen_seq) * prob_num)).replace('A', 'g',
+                                                                                   int(len(chosen_seq) * prob_num))
+            new1 = prior.replace('G', 'a', int(len(chosen_seq) * prob_num)).replace('T', 'c',
+                                                                                    int(len(chosen_seq) * prob_num))
             print("-->Sequence with Probability", prob_num, " ----------> Random Mutation and Nucleotide Replacement")
             print(random.choice([new, new1]), "\n")
+            with open('BioInfo_Output.txt', 'w') as file4:
+                with redirect_stdout(file4):
+                    print(random.choice([new, new1]))
+
+
         replace_nucleotides()
 else:
 
@@ -88,7 +110,57 @@ else:
 
 print("#########################################################################################################\n")
 print(input("Press Enter to Continue"))
-print("Done")
+
+print("II . Simulator for Sequence Partitioning")
+print("Follow These Conditions: x <= z <= y")
+print("File Consists of %i Records\n" % len(records))
+
+x = int(input("Enter Minimum Fragment Length\n"))
+y = int(input("Enter Maximum Fragment Length\n"))
+z = int(input("Enter Maximum ACCEPTABLE Fragment Length\n"))
+
+for i in range(len(records)):
+    def sequenceSplit(word, splits):
+        for splitLen in splits:
+            if splitLen > len(word):
+                break
+            yield word[:splitLen]
+            word = word[splitLen::]
+
+    def randomLenGen(low, hi):
+        while True:
+            yield random.randint(low, hi)
+
+
+    word_list = list(sequenceSplit(chosen_seq.seq, randomLenGen(x, z)))
+    print(word_list)
+
+    print([len(i) for i in word_list])
+
+
+# def sequenceSplit(word, splits):
+#     for splitLen in splits:
+#         if splitLen > len(word):
+#             break
+#         yield word[:splitLen]
+#         word = word[splitLen::]
+#
+#
+# def randomLenGen(low, hi):
+#     while True:
+#         yield random.randint(low, hi)
+#
+#
+# word_list = list(sequenceSplit(chosen_seq.seq, randomLenGen(x, z)))
+# print(word_list)
+#
+# print([len(i) for i in word_list])
+
+
+
+
+
+
 
 # def sliceString(Str, n):
 #     parts = len(Str) // n
