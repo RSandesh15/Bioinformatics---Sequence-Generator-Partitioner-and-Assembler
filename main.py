@@ -4,6 +4,7 @@ import sys
 import Bio
 from Bio.Seq import Seq
 from Bio import SeqIO
+import itertools
 from random import shuffle
 
 records = list(SeqIO.parse("ls_orchid.fasta", "fasta"))
@@ -58,7 +59,7 @@ if k == 3:
 elif k == 1:
     print("Original Sequence")
     print(chosen_seq.seq + "\n")
-    with open('BioInfo_Output.txt', 'w') as file1:
+    with open('BioInfo_Output.fasta', 'w') as file1:
         with redirect_stdout(file1):
             print(chosen_seq.seq, "\n\n")
 
@@ -67,7 +68,7 @@ elif k > 1:
     prob_num = float(input("Enter Desired Probability Between 0 and 1 (Real Number)\n"))
     print("Original Sequence")
     print(chosen_seq.seq + "\n")
-    with open('BioInfo_Output.txt', 'w') as file2:
+    with open('BioInfo_Output.fasta', 'w') as file2:
         with redirect_stdout(file2):
             print(chosen_seq.seq, "\n\n")
 
@@ -85,7 +86,7 @@ elif k > 1:
         new_phrase = remove_random_character(string, remove_number)
         print("-->Sequence with Probability", prob_num, " ----------> Randomly Delete Nucleotides")
         print(new_phrase)
-        with open('BioInfo_Output.txt', 'w') as file3:
+        with open('BioInfo_Output.fasta', 'w') as file3:
             with redirect_stdout(file3):
                 print(new_phrase)
 
@@ -98,7 +99,7 @@ elif k > 1:
                                                                                     int(len(chosen_seq) * prob_num))
             print("-->Sequence with Probability", prob_num, " ----------> Random Mutation and Nucleotide Replacement")
             print(random.choice([new, new1]), "\n")
-            with open('BioInfo_Output.txt', 'w') as file4:
+            with open('BioInfo_Output.fasta', 'w') as file4:
                 with redirect_stdout(file4):
                     print(random.choice([new, new1]))
 
@@ -115,9 +116,9 @@ print("II . Simulator for Sequence Partitioning")
 print("Follow These Conditions: x <= z <= y")
 print("File Consists of %i Records\n" % len(records))
 
-x = int(input("Enter Minimum Fragment Length\n"))
-y = int(input("Enter Maximum Fragment Length\n"))
-z = int(input("Enter Maximum ACCEPTABLE Fragment Length\n"))
+x = int(input("Enter Minimum Fragment Length ----> x\n"))
+y = int(input("Enter Maximum Fragment Length ----> y\n"))
+z = int(input("Enter Maximum ACCEPTABLE Fragment Length ----> z\n"))
 
 for i in range(len(records)):
     def sequenceSplit(word, splits):
@@ -134,8 +135,22 @@ for i in range(len(records)):
 
     word_list = list(sequenceSplit(chosen_seq.seq, randomLenGen(x, z)))
     print(word_list)
-
     print([len(i) for i in word_list])
+
+    j2 = [len(i) for i in word_list if len(i) < z]
+    j3 = [len(i) for i in word_list if len(i) <= x]
+
+    print(j2, "----> Fragment Lengths Less Than 'z'. These Sequences Will be Written to Output File")
+    print(j3, "----> Fragment Lengths Less Than 'x'. Permanently Discarded\n")
+
+
+print("#########################################################################################################\n")
+print(input("Press Enter to Continue"))
+print("III . Simulator for Sequence Assembler")
+s = int(input("Enter Score for Match (Positive Integer)\n"))
+r = int(input("Enter Penalty for Replace (Negative Integer)\n"))
+g = int(input("Penalty for Delete/Insert (Negative Integer)\n"))
+
 
 
 # def sequenceSplit(word, splits):
