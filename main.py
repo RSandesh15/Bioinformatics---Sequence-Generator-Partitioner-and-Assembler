@@ -3,9 +3,11 @@ from contextlib import redirect_stdout
 import sys
 import Bio
 from Bio.Seq import Seq
-from Bio import SeqIO
+from Bio import SeqIO, pairwise2
 import itertools
 from random import shuffle
+
+from Bio.pairwise2 import format_alignment
 
 records = list(SeqIO.parse("ls_orchid.fasta", "fasta"))
 print("File Consists of %i Records\n" % len(records))
@@ -35,12 +37,10 @@ if k == 3:
     print("Original Sequence")
     print(chosen_seq.seq + "\n")
 
-
     def remove_random_character(phrase, n_remove):
         for num in random.sample(range(0, len(phrase)), n_remove):
             phrase = phrase[:num] + '_' + phrase[num + 1:]
         return phrase
-
 
     string = chosen_seq.seq
     len_of_seq = float(len(chosen_seq))
@@ -59,6 +59,7 @@ if k == 3:
 elif k == 1:
     print("Original Sequence")
     print(chosen_seq.seq + "\n")
+
     with open('BioInfo_Output.fasta', 'w') as file1:
         with redirect_stdout(file1):
             print(chosen_seq.seq, "\n\n")
@@ -78,7 +79,6 @@ elif k > 1:
                 phrase = phrase[:num] + '_' + phrase[num + 1:]
             return phrase
 
-
         string = chosen_seq.seq
         len_of_seq = float(len(chosen_seq))
         remove_percentage = float(0.2)
@@ -89,7 +89,6 @@ elif k > 1:
         with open('BioInfo_Output.fasta', 'w') as file3:
             with redirect_stdout(file3):
                 print(new_phrase)
-
 
         def replace_nucleotides():
             prior = str(chosen_seq.seq)
@@ -102,7 +101,6 @@ elif k > 1:
             with open('BioInfo_Output.fasta', 'w') as file4:
                 with redirect_stdout(file4):
                     print(random.choice([new, new1]))
-
 
         replace_nucleotides()
 else:
@@ -143,14 +141,22 @@ for i in range(len(records)):
     print(j2, "----> Fragment Lengths Less Than 'z'. These Sequences Will be Written to Output File")
     print(j3, "----> Fragment Lengths Less Than 'x'. Permanently Discarded\n")
 
+    with open('BioInfo_Output.fasta', 'w') as file5:
+        with redirect_stdout(file5):
+            print(j2)
+
 
 print("#########################################################################################################\n")
 print(input("Press Enter to Continue"))
 print("III . Simulator for Sequence Assembler")
-s = int(input("Enter Score for Match (Positive Integer)\n"))
-r = int(input("Enter Penalty for Replace (Negative Integer)\n"))
-g = int(input("Penalty for Delete/Insert (Negative Integer)\n"))
+s = float(input("Enter Score for Match (Positive Integer)\n"))
+r = float(input("Enter Penalty for Replace (Negative Integer)\n"))
+g = float(input("Penalty for Delete/Insert (Negative Integer)\n"))
 
+
+for a in pairwise2.align.globalms(repr(first_record.seq), repr(last_record.seq), s, r, g, 0):
+    print(format_alignment(*a))
+    break
 
 
 # def sequenceSplit(word, splits):
@@ -170,11 +176,6 @@ g = int(input("Penalty for Delete/Insert (Negative Integer)\n"))
 # print(word_list)
 #
 # print([len(i) for i in word_list])
-
-
-
-
-
 
 
 # def sliceString(Str, n):
