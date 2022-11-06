@@ -6,7 +6,6 @@ from Bio.Seq import Seq
 from Bio import SeqIO, pairwise2
 import itertools
 from random import shuffle
-
 from Bio.pairwise2 import format_alignment
 
 records = list(SeqIO.parse("ls_orchid.fasta", "fasta"))
@@ -130,7 +129,6 @@ for i in range(len(records)):
         while True:
             yield random.randint(low, hi)
 
-
     word_list = list(sequenceSplit(chosen_seq.seq, randomLenGen(x, z)))
     print(word_list)
     print([len(i) for i in word_list])
@@ -144,7 +142,6 @@ for i in range(len(records)):
     with open('BioInfo_Output.fasta', 'w') as file5:
         with redirect_stdout(file5):
             print(j2)
-
 
 print("#########################################################################################################\n")
 print(input("Press Enter to Continue"))
